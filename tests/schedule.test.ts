@@ -1,4 +1,4 @@
-import { CreateScheduleUseCase } from '../src/application/useCases/CreateSchedule';
+import { CreateScheduleUseCase } from '../src/application/useCases/createSchedule';
 import { GetScheduleWithActivitiesUseCase} from'../src/application/useCases/getScheduleWithActivities';
 import { ScheduleRepository } from '../src/domain/repositories/scheduleRepository';
 import { ActivityRepository } from '../src/domain/repositories/activityRepository';
