@@ -8,8 +8,6 @@ services:
       POSTGRES_DB: outbuild_assessment
     volumes:
       - ./data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
     networks:
       - outbuild
   app:
@@ -21,12 +19,18 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://postgres:admin@db:5432/outbuild_assessment
-      JWT_SECRET: 6952c2ed45795f9370dd0e2c0a4ceb640b9fe09ab43e06357765e907ce619d05
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     volumes:
       - .:/src
     networks:
       - outbuild
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
     command: npm run start
 networks:
   outbuild:
