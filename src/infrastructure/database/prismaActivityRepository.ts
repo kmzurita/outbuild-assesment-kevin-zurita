@@ -9,7 +9,7 @@ export class PrismaActivityRepository implements ActivityRepository {
     const activities = await this.prisma.activity.findMany({ where: { scheduleId } });
     return activities.map(
       (activity: any) =>
-        new Activity(activity.id, activity.name, activity.startDate, activity.endDate, activity.scheduleId)
+        new Activity(activity.name, activity.startDate, activity.endDate, activity.scheduleId, activity.id)
     );
   }
 
@@ -23,11 +23,11 @@ export class PrismaActivityRepository implements ActivityRepository {
       },
     });
     return new Activity(
-      createdActivity.id,
       createdActivity.name,
       createdActivity.startDate,
       createdActivity.endDate,
-      createdActivity.scheduleId
+      createdActivity.scheduleId,
+      createdActivity.id
     );
   }
 

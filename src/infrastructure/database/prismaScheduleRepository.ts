@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { Schedule } from '../../domain/entities/schedule';
 import { ScheduleRepository } from '../../domain/repositories/scheduleRepository';
+import { ScheduleDto } from '../../application/dto/scheduleDto';
 
 export class PrismaScheduleRepository implements ScheduleRepository {
   constructor(private prisma: PrismaClient) {}
@@ -26,7 +27,7 @@ export class PrismaScheduleRepository implements ScheduleRepository {
   async findScheduleByUserId(userId: number): Promise<Schedule[]> {
     const schedules = await this.prisma.schedule.findMany({ where: { userId } });
     return schedules.map(
-      (schedule: any) => new Schedule(schedule.id, schedule.name, schedule.imageUrl, schedule.userId)
+      (schedule: ScheduleDto) => new Schedule(schedule.name, schedule.imageUrl, schedule.id, schedule.userId)
     );
   }
 }

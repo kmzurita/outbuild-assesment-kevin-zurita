@@ -4,7 +4,8 @@ export class JwtService {
   constructor(private readonly secretKey: string) {}
 
   generateToken(payload: object): string {
-    return jwt.sign(payload, this.secretKey, { expiresIn: '1h' });
+    const time = '1h';
+    return jwt.sign(payload, this.secretKey, { expiresIn: time });
   }
 
   verifyToken(token: string): object | string {
