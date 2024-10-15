@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { PrismaClient } from '@prisma/client';
 import { PrismaScheduleRepository } from '../../infrastructure/database/prismaScheduleRepository';
 import { PrismaActivityRepository } from '../../infrastructure/database/prismaActivityRepository';
@@ -18,6 +19,34 @@ const jwtService = new JwtService(process.env.JWT_SECRET!);
 
 router.use(authMiddleware(jwtService));
 
+/**
+ * @swagger
+ * /api/schedules:
+ *   post:
+ *     summary: Create a new schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - imageUrl
+ *             properties:
+ *               name:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Schedule created successfully
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/', async (req, res, next) => {
   try {
     const createScheduleUseCase = new CreateScheduleUseCase(scheduleRepository);
@@ -27,12 +56,34 @@ router.post('/', async (req, res, next) => {
       userId: req.body.userId!,
     });
     logger.info(`Schedule created: ${schedule.getId()}`);
-    res.status(201).json(schedule);
+    res.status(StatusCodes.CREATED).json(schedule);
   } catch (error) {
     next(error);
   }
 });
 
+/**
+ * @swagger
+ * /api/schedules/{id}:
+ *   get:
+ *     summary: Get a schedule with its activities
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: int
+ *     responses:
+ *       200:
+ *         description: Schedule with activities
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Schedule not found
+ */
 router.get('/:id', async (req, res, next) => {
   try {
     const getScheduleWithActivitiesUseCase = new GetScheduleWithActivitiesUseCase(
@@ -47,6 +98,47 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+/**
+ * @swagger
+ * /api/schedules/{id}/activities:
+ *   post:
+ *     summary: Add an activity to a schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: int
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - startDate
+ *               - endDate
+ *             properties:
+ *               name:
+ *                 type: string
+ *               startDate:
+ *                 type: string
+ *                 format: date-time
+ *               endDate:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Activity added successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Schedule not found
+ */
 router.post('/:id/activities', async (req, res, next) => {
   try {
     const addActivityToScheduleUseCase = new AddActivityToScheduleUseCase(activityRepository);
@@ -57,12 +149,60 @@ router.post('/:id/activities', async (req, res, next) => {
       scheduleId: Number(req.params.id),
     });
     logger.info(`Activity added to schedule: ${activity.getId()}`);
-    res.status(201).json(activity);
+    res.status(StatusCodes.CREATED).json(activity);
   } catch (error) {
     next(error);
   }
 });
 
+/**
+ * @swagger
+ * /api/schedules/{id}/activities/batch:
+ *   post:
+ *     summary: Add multiple activities to a schedule
+ *     tags: [Schedules]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - activities
+ *             properties:
+ *               activities:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - name
+ *                     - startDate
+ *                     - endDate
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                     startDate:
+ *                       type: string
+ *                       format: date-time
+ *                     endDate:
+ *                       type: string
+ *                       format: date-time
+ *     responses:
+ *       201:
+ *         description: Activities added successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Schedule not found
+ */
 router.post('/:id/activities/batch', async (req, res, next) => {
   try {
     const addMultipleActivitiesToScheduleUseCase = new AddActivityBatchToScheduleUseCase(
@@ -77,7 +217,7 @@ router.post('/:id/activities/batch', async (req, res, next) => {
       }))
     );
     logger.info(`Multiple activities added to schedule: ${req.params.id}`);
-    res.status(201).json({ message: 'Activities added successfully' });
+    res.status(StatusCodes.CREATED).json({ message: 'Activities added successfully' });
   } catch (error) {
     next(error);
   }

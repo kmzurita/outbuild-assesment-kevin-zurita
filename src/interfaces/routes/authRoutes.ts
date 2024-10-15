@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { PrismaClient } from '@prisma/client';
 import { PrismaUserRepository } from '../../infrastructure/database/prismaUserRepository';
 import { JwtService } from '../../infrastructure/security/jwtService';
@@ -10,6 +11,33 @@ const prisma = new PrismaClient();
 const userRepository = new PrismaUserRepository(prisma);
 const jwtService = new JwtService(process.env.JWT_SECRET!);
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: User already exists
+ */
 router.post('/register', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -24,12 +52,46 @@ router.post('/register', async (req, res, next) => {
         id: 0,
     });
     logger.info(`User registered: ${user.id}`);
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(StatusCodes.CREATED).json({ message: 'User registered successfully' });
   } catch (error) {
-    res.status(400).send({"error": "User already exists"});
+    res.status(StatusCodes.BAD_REQUEST).send({"error": "User already exists"});
   }
 });
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login and receive a JWT token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid credentials
+ */
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -45,7 +107,7 @@ router.post('/login', async (req, res, next) => {
     logger.info(`User logged in: ${user.id}`);
     res.json({ token });
   } catch (error) {
-    res.status(400).json({"error": "Invalid credentials"});
+    res.status(StatusCodes.BAD_REQUEST).json({"error": "Invalid credentials"});
   }
 });
 
