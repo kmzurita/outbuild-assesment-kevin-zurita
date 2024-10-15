@@ -1,0 +1,11 @@
+yamlCopyversion: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:admin@db:5432/outbuild_assessment
+      JWT_SECRET: 6952c2ed45795f9370dd0e2c0a4ceb640b9fe09ab43e06357765e907ce619d05
