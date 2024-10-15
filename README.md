@@ -27,7 +27,7 @@ Key features include:
 
 ## Core Technologies
 
-- **Node.js**: Backend runtime environment
+- **Node.js**: Backend runtime environment v20.18
 - **Express.js**: Web framework for building REST APIs
 - **PostgreSQL**: Relational database for managing users, schedules, and activities
 - **Docker**: For containerization and easy deployment
@@ -89,6 +89,7 @@ This project uses Docker for containerization. To run the project, follow these 
 1. Clone the repository.
 2. Run `docker-compose up` to start the server and database.
 3. Access the API through `http://localhost:3000`.
+4. To run tests use the command `npm run test`
 
 For more detailed instructions, see the "Installation" section below.
 

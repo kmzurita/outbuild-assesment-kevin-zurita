@@ -3,8 +3,8 @@ services:
     hostname: db
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: outbuild_assessment
     volumes:
       - ./data:/var/lib/postgresql/data
