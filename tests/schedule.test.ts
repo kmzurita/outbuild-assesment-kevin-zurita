@@ -62,8 +62,8 @@ describe('CreateScheduleUseCase', () => {
       const scheduleId = expect.any(Number);
       const mockSchedule = new Schedule('Test Schedule', 'http://example.com/image.jpg', scheduleId, expect.any(Number));
       const mockActivities = [
-        new Activity(expect.any(Number), 'Activity 1', new Date(), new Date(), scheduleId),
-        new Activity(expect.any(Number), 'Activity 2', new Date(), new Date(), scheduleId),
+        new Activity('Activity 1', new Date(), new Date(), scheduleId, expect.any(Number)),
+        new Activity('Activity 2', new Date(), new Date(), scheduleId, expect.any(Number)),
       ];
   
       mockScheduleRepository.findScheduleById.mockResolvedValue(mockSchedule);

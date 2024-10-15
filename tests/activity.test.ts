@@ -24,7 +24,7 @@ describe('AddActivityToScheduleUseCase', () => {
         scheduleId: 1,
       };
   
-      const expectedActivity = new Activity(expect.any(Number), activityData.name, activityData.startDate, activityData.endDate, activityData.scheduleId);
+      const expectedActivity = new Activity(activityData.name, activityData.startDate, activityData.endDate, activityData.scheduleId, expect.any(Number));
   
       mockActivityRepository.createActivity.mockResolvedValue(expectedActivity);
   
