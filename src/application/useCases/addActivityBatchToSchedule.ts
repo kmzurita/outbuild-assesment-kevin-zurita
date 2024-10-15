@@ -9,7 +9,6 @@ export class AddActivityBatchToScheduleUseCase {
     const activities = dtos.map(
       dto =>
         new Activity(
-            dto.id ?? 0,
             dto.name,
             dto.startDate,
             dto.endDate,

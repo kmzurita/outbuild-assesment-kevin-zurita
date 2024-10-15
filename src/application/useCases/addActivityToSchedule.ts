@@ -7,7 +7,6 @@ export class AddActivityToScheduleUseCase {
 
   async execute(dto: ActivityDto): Promise<Activity> {
     const activity = new Activity(
-        dto.id ??  0,
         dto.name,
         dto.startDate,
         dto.endDate,

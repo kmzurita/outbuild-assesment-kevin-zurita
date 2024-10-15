@@ -5,8 +5,8 @@ export class Activity {
     private endDate: Date;
     private scheduleId: number;
 
-    constructor(id: number, name: string, startDate: Date, endDate: Date, scheduleId: number) {
-        this.id = id;
+    constructor(name: string, startDate: Date, endDate: Date, scheduleId: number, id?: number) {
+        this.id = id ?? 0;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -29,7 +29,7 @@ export class Activity {
         return this.endDate;
     }
 
-    public getScheduleId(){
+    public getScheduleId(): number{
         return this.scheduleId;
     }
 }
