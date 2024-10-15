@@ -21,7 +21,6 @@ router.use(authMiddleware(jwtService));
 router.post('/', async (req, res, next) => {
   try {
     const createScheduleUseCase = new CreateScheduleUseCase(scheduleRepository);
-    console.log(req.body);
     const schedule = await createScheduleUseCase.execute({
       name: req.body.name,
       imageUrl: req.body.imageUrl,
@@ -64,7 +63,7 @@ router.post('/:id/activities', async (req, res, next) => {
   }
 });
 
-router.post('/:id/activities/bulk', async (req, res, next) => {
+router.post('/:id/activities/batch', async (req, res, next) => {
   try {
     const addMultipleActivitiesToScheduleUseCase = new AddActivityBatchToScheduleUseCase(
       activityRepository
