@@ -1,0 +1,33 @@
+prismaCopygenerator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(autoincrement())
+  email        String     @unique
+  passwordHash String
+  schedules    Schedule[]
+}
+
+model Schedule {
+  id        String     @id @default(autoincrement())
+  name      String     @unique
+  imageUrl  String
+  userId    String
+  user      User       @relation(fields: [userId], references: [id])
+  activities Activity[]
+}
+
+model Activity {
+  id         String   @id @default(autoincrement())
+  name       String
+  startDate  DateTime
+  endDate    DateTime
+  scheduleId String
+  schedule   Schedule @relation(fields: [scheduleId], references: [id])
+}
