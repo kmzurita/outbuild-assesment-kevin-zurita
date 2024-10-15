@@ -1,23 +1,11 @@
 export class User {
-    private id: number;
-    private email: string;
-    private passwordHash: string;
+    public id: number;
+    public email: string;
+    public passwordHash: string;
 
-    constructor(id: number, email: string, passwordHash: string) {
-        this.id = id;
+    constructor(email: string, passwordHash: string, id?: number) {
+        this.id = id ?? 0;
         this.email = email;
         this.passwordHash = passwordHash;
-    }
-
-    public getId(): number{
-        return this.id;
-    }
-
-    public getEmail(): string{
-        return this.email;
-    }
-
-    public getPasswordHash(): string{
-        return this.passwordHash;
     }
 }

@@ -1,5 +1,5 @@
 export interface ScheduleDto {
-    id: number;
+    id?: number;
     name: string;
     imageUrl: string;
     userId: number;

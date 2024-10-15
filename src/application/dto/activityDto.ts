@@ -1,5 +1,5 @@
 export interface ActivityDto {
-    id: number;
+    id?: number;
     name: string;
     startDate: Date;
     endDate: Date;

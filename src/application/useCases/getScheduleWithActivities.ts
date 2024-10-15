@@ -9,7 +9,7 @@ export class GetScheduleWithActivitiesUseCase {
     private activityRepository: ActivityRepository
   ) {}
 
-  async execute(scheduleId: string): Promise<{ schedule: Schedule; activities: Activity[] }> {
+  async execute(scheduleId: number): Promise<{ schedule: Schedule; activities: Activity[] }> {
     const schedule = await this.scheduleRepository.findScheduleById(scheduleId);
     if (!schedule) {
       throw new Error('Schedule not found');
