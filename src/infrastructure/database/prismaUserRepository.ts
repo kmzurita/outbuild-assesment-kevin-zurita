@@ -8,21 +8,20 @@ export class PrismaUserRepository implements UserRepository {
   async createUser(user: User): Promise<User> {
     const createdUser = await this.prisma.user.create({
       data: {
-        id: user.getId(),
-        email: user.getEmail(),
-        passwordHash: user.getPasswordHash(),
+        email: user.email,
+        passwordHash: user.passwordHash,
       },
     });
-    return new User(createdUser.id, createdUser.email, createdUser.passwordHash);
+    return new User(createdUser.email, createdUser.passwordHash);
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({ where: { email } });
-    return user ? new User(user.id, user.email, user.passwordHash) : null;
+    return user ? new User(user.email, user.passwordHash, user.id) : null;
   }
 
-  async findUserById(id: string): Promise<User | null> {
+  async findUserById(id: number): Promise<User | null> {
     const user = await this.prisma.user.findUnique({ where: { id } });
-    return user ? new User(user.id, user.email, user.passwordHash) : null;
+    return user ? new User(user.email, user.passwordHash) : null;
   }
 }

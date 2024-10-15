@@ -10,19 +10,20 @@ export class PrismaScheduleRepository implements ScheduleRepository {
       data: {
         name: schedule.getName(),
         imageUrl: schedule.getImageUrl(),
+        userId: schedule.getUserId()
       },
     });
     return new Schedule(createdSchedule.name, createdSchedule.imageUrl, createdSchedule.id, createdSchedule.userId);
   }
 
-  async findScheduleById(id: string): Promise<Schedule | null> {
+  async findScheduleById(id: number): Promise<Schedule | null> {
     const schedule = await this.prisma.schedule.findUnique({ where: { id } });
     return schedule
       ? new Schedule(schedule.name, schedule.imageUrl, schedule.id, schedule.userId)
       : null;
   }
 
-  async findScheduleByUserId(userId: string): Promise<Schedule[]> {
+  async findScheduleByUserId(userId: number): Promise<Schedule[]> {
     const schedules = await this.prisma.schedule.findMany({ where: { userId } });
     return schedules.map(
       (schedule: any) => new Schedule(schedule.id, schedule.name, schedule.imageUrl, schedule.userId)

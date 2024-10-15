@@ -5,10 +5,17 @@ import { ActivityRepository } from '../../domain/repositories/activityRepository
 export class PrismaActivityRepository implements ActivityRepository {
   constructor(private prisma: PrismaClient) {}
 
+  async findActivitiesByScheduleId(scheduleId: number): Promise<Activity[]> {
+    const activities = await this.prisma.activity.findMany({ where: { scheduleId } });
+    return activities.map(
+      (activity: any) =>
+        new Activity(activity.id, activity.name, activity.startDate, activity.endDate, activity.scheduleId)
+    );
+  }
+
   async createActivity(activity: Activity): Promise<Activity> {
     const createdActivity = await this.prisma.activity.create({
       data: {
-        id: activity.getId(),
         name: activity.getName(),
         startDate: activity.getStartDate(),
         endDate: activity.getEndDate(),
@@ -24,22 +31,13 @@ export class PrismaActivityRepository implements ActivityRepository {
     );
   }
 
-  async findActivitiesByScheduleId(scheduleId: string): Promise<Activity[]> {
-    const activities = await this.prisma.activity.findMany({ where: { scheduleId } });
-    return activities.map(
-      (activity: any) =>
-        new Activity(activity.id, activity.name, activity.startDate, activity.endDate, activity.scheduleId)
-    );
-  }
-
   async createBatchActivity(activities: Activity[]): Promise<void> {
     await this.prisma.activity.createMany({
       data: activities.map((activity) => ({
-        id: activity.getId(),
         name: activity.getName(),
         startDate: activity.getStartDate(),
         endDate: activity.getEndDate(),
-        scheduleId: activity.getScheduleId(),
+        scheduleId: Number(activity.getScheduleId()),
       })),
     });
   }
